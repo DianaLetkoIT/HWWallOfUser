@@ -1,4 +1,3 @@
-
 fun main() {
     val newPost = Post(
         ownerId = 123,
@@ -81,8 +80,161 @@ data class Post(
     val isPinned: Int = 0,
     val markedAsAds: Int = 0,
     val isFavorite: Boolean = false,
-    val donut: Donut = Donut()
+    val donut: Donut = Donut(),
+    val postponedId: Int = 0
 )
+
+interface Attachment {
+    val type: String
+}
+
+abstract class PhotoAttachment(
+    override val type: String
+) : Attachment {
+    abstract val id: Int
+    abstract val ownerId: Int
+
+
+}
+
+class Photo(
+    override val id: Int, override val ownerId: Int,
+    val albumId: Int,
+    val userId: Int,
+    val text: String,
+    val date: Int,
+    val sizes: Sizes = Sizes(),
+    val width: Int,
+    val height: Int,
+) : PhotoAttachment("photo") {
+    class Sizes {
+        val type: String = ""
+        val url: String = ""
+        val width: Int = 0
+        val height: Int = 0
+
+    }
+}
+
+
+abstract class AttachLinkAttachment(
+    override val type: String
+) : Attachment {
+
+}
+
+class AttachLink(
+    val url: String,
+    val title: String,
+    val caption: String? = null,
+    val description: String,
+    val photo: Photo = Photo(1, 1, 1, 1, "", 1, Photo.Sizes(), 1, 1),
+    val previewPage: String,
+    val previewUrl: String
+
+) : AttachLinkAttachment("attachLink")
+
+abstract class AudioAttachment(
+    override val type: String
+) : Attachment {
+    abstract val id: Int
+    abstract val ownerId: Int
+
+}
+
+class Audio(
+    override val id: Int,
+    override val ownerId: Int,
+    val title: String,
+    val artist: String,
+    val duration: Int,
+    val url: String,
+    val liricsId: Int? = null,
+    val albumId: Int? = null,
+    val genreId: Int,
+    val date: Int,
+    val noSearch: Int? = null,
+    val isHd: Int
+
+) : AudioAttachment("audio")
+
+abstract class StickerAttachment(
+    override val type: String
+) : Attachment {
+
+}
+
+class Sticker(
+    val stickerId: Int,
+    val innerType: String,
+    val isAllowed: Boolean,
+    val productId: Int,
+    val images: Images = Images(),
+    val imagesWithBackground: ImagesWithBackground = ImagesWithBackground(),
+    val animationUrl: String
+) : StickerAttachment("sticker") {
+    class Images {
+        val url: String = ""
+        val width: Int = 0
+        val height: Int = 0
+    }
+
+    class ImagesWithBackground {
+        val url: String = ""
+        val width: Int = 0
+        val height: Int = 0
+    }
+}
+
+abstract class HistoryAttachment(
+    override val type: String
+) : Attachment {
+    abstract val id: Int
+    abstract val ownerId: Int
+
+}
+
+class History(
+    override val ownerId: Int,
+    override val id: Int,
+    val expiredAd: Int,
+    val isExpired: Boolean,
+    val canSee: Boolean,
+    val date: Int,
+    val seen: Int,
+    val isDeleted: Boolean,
+    val photo: Photo,
+    val video: Video,
+    val link: String,
+    val parentStoryOwnerId: Int,
+    val parentStory: History,
+    val replies: Replies = Replies(),
+    val canComment: Boolean,
+    val canShare: Boolean,
+    val canReply: Boolean,
+    val clickableStickers: ClickableStickers = ClickableStickers(),
+    val views: Int,
+    val accessKey: String
+
+
+) : HistoryAttachment("history") {
+    class Video {
+        val first_frame_800: String = ""
+        val first_frame_320: String = ""
+        val first_frame_160: String = ""
+        val first_frame_130: String = ""
+        val is_private: Boolean = false
+    }
+
+    class Replies {
+        val count: Int = 0
+        val new: Int = 0
+    }
+
+    class ClickableStickers {
+
+    }
+}
 
 object WallService {
     private var posts = emptyArray<Post>()
