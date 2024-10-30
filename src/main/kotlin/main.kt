@@ -89,7 +89,8 @@ interface Attachment {
 }
 
 abstract class PhotoAttachment(
-    override val type: String
+    override val type: String,
+    val photo: Photo
 ) : Attachment {
     abstract val id: Int
     abstract val ownerId: Int
@@ -98,7 +99,8 @@ abstract class PhotoAttachment(
 }
 
 class Photo(
-    override val id: Int, override val ownerId: Int,
+    val id: Int,
+    val ownerId: Int,
     val albumId: Int,
     val userId: Int,
     val text: String,
@@ -106,19 +108,19 @@ class Photo(
     val sizes: Sizes = Sizes(),
     val width: Int,
     val height: Int,
-) : PhotoAttachment("photo") {
+) {
     class Sizes {
         val type: String = ""
         val url: String = ""
         val width: Int = 0
         val height: Int = 0
-
     }
 }
 
 
 abstract class AttachLinkAttachment(
-    override val type: String
+    override val type: String,
+    val attachLink: AttachLink
 ) : Attachment {
 
 }
@@ -132,10 +134,11 @@ class AttachLink(
     val previewPage: String,
     val previewUrl: String
 
-) : AttachLinkAttachment("attachLink")
+)
 
 abstract class AudioAttachment(
-    override val type: String
+    override val type: String,
+    val audio: Audio
 ) : Attachment {
     abstract val id: Int
     abstract val ownerId: Int
@@ -143,8 +146,8 @@ abstract class AudioAttachment(
 }
 
 class Audio(
-    override val id: Int,
-    override val ownerId: Int,
+    val id: Int,
+    val ownerId: Int,
     val title: String,
     val artist: String,
     val duration: Int,
@@ -156,10 +159,11 @@ class Audio(
     val noSearch: Int? = null,
     val isHd: Int
 
-) : AudioAttachment("audio")
+)
 
 abstract class StickerAttachment(
-    override val type: String
+    override val type: String,
+    val sticker: Sticker
 ) : Attachment {
 
 }
@@ -172,7 +176,7 @@ class Sticker(
     val images: Images = Images(),
     val imagesWithBackground: ImagesWithBackground = ImagesWithBackground(),
     val animationUrl: String
-) : StickerAttachment("sticker") {
+)  {
     class Images {
         val url: String = ""
         val width: Int = 0
@@ -187,7 +191,8 @@ class Sticker(
 }
 
 abstract class HistoryAttachment(
-    override val type: String
+    override val type: String,
+    val history: History
 ) : Attachment {
     abstract val id: Int
     abstract val ownerId: Int
@@ -195,8 +200,8 @@ abstract class HistoryAttachment(
 }
 
 class History(
-    override val ownerId: Int,
-    override val id: Int,
+    val ownerId: Int,
+    val id: Int,
     val expiredAd: Int,
     val isExpired: Boolean,
     val canSee: Boolean,
@@ -217,7 +222,7 @@ class History(
     val accessKey: String
 
 
-) : HistoryAttachment("history") {
+) {
     class Video {
         val first_frame_800: String = ""
         val first_frame_320: String = ""
